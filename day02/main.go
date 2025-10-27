@@ -31,6 +31,18 @@ func main() {
 			}
 
 			difference := level - prevLevel
+			differenceAbs := difference
+			if differenceAbs < 0 {
+				differenceAbs *= -1
+			}
+
+			prevLevel = level
+
+			if differenceAbs > 3 || differenceAbs < 1 {
+				recordSafe = false
+				println("Record unsafe because of difference ", differenceAbs, " between ", level, " and ", prevLevel)
+				break // Go to next record
+			}
 
 			var slope int
 			if difference > 0 {
@@ -39,31 +51,17 @@ func main() {
 				slope = -1
 			}
 
-			if difference < 0 {
-				difference *= -1
-			}
-
-			if difference > 3 || difference < 1 {
-				recordSafe = false
-				println("Record unsafe because of difference ", difference, " between ", level, " and ", prevLevel)
-				prevLevel = level
-				break // Go to next record
-			}
-
 			if i == 1 {
 				slopeTrend = slope
-				prevLevel = level
 				continue
 			}
 
 			if slope != slopeTrend {
 				recordSafe = false
 				println("Record unsafe because of slope between ", level, " and ", prevLevel)
-				prevLevel = level
 				break
 			}
 
-			prevLevel = level
 		}
 
 		if recordSafe {
